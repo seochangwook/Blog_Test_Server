@@ -66,6 +66,7 @@ try
 	System.out.println("row count: "+row_count);
 	
 	//현재 이름이 존재하는지 검사. 행의 개수가 0개이면 검색이 되지 않은 것.//
+	//동명이인도 고려하면 더 세부적인 조건이 필요하지만 생략//
 	if(row_count >= 1)
 	{
 		//만약 결과가 여러개이라면 JSONArray를 이용해서 작업을 한다.//
@@ -104,32 +105,21 @@ finally
 //JSON 생성(넘어갈 데이터는 유저정보이니 JSONArray는 필요없다.)//
 JSONObject result_object = new JSONObject();
 
+result_object.put("is_success", ""+is_success); //문자열로 검색 성공과 실패를 판단. 성공 시 내부 result객체에 정보가 있다는 의미//
 //검색조건에 따른 각각의 json데이터를 만들어 준다.//
-if(is_success == true)
-{
-	JSONObject user_object = new JSONObject();
+JSONObject user_object = new JSONObject();
 
-	user_object.put("name", receive_name);
-	user_object.put("department", department_name);
-	user_object.put("image", people_image);
-	user_object.put("introduction", introduction);
-	user_object.put("etc", etc);
+user_object.put("name", receive_name);
+user_object.put("department", department_name);
+user_object.put("image", people_image);
+user_object.put("introduction", introduction);
+user_object.put("etc", etc);
 
-	result_object.put("result", user_object);
+result_object.put("result", user_object);
 
-	out.clear(); //보내기전 기존 출력내용을 초기화//
-	out.println(result_object); //데이터 출력 및 전송//
-	out.flush(); //출력버퍼에 있는 데이터를 모두 초기화//
-}
-
-else if(is_success == false)
-{
-	result_object.put("error", error_msg);
-	
-	out.clear(); //보내기전 기존 출력내용을 초기화//
-	out.println(result_object); //데이터 출력 및 전송//
-	out.flush(); //출력버퍼에 있는 데이터를 모두 초기화//
-}
+out.clear(); //보내기전 기존 출력내용을 초기화//
+out.println(result_object); //데이터 출력 및 전송//
+out.flush(); //출력버퍼에 있는 데이터를 모두 초기화//
 %>
 <%
 //로그정보 기록//
