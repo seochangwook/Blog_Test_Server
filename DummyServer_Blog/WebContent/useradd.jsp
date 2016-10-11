@@ -24,6 +24,9 @@ String introduction;
 boolean is_enroll = true; //등록성공이라 가정//
 //우선 저장할려는 사람이 이미 등록되어 있는지 검사//
 boolean is_enroll_already; //기본적으로 가입이 안되었다는 가정//
+
+boolean is_save = false; //처음은 실패라 가정//
+log log_file = new log();
 %>
 <%
 //image save path(다시 클라이언트로 전송 시 해당 경로값을 적용)//
@@ -117,6 +120,24 @@ result_object.put("result", user_object);
 out.clear(); //보내기전 기존 출력내용을 초기화//
 out.println(result_object); //데이터 출력 및 전송//
 out.flush(); //출력버퍼에 있는 데이터를 모두 초기화//
+%>
+<%
+//로그정보 기록//
+String client_ipaddr = request.getRemoteAddr();
+String log_data = "["+client_ipaddr+"] call ["+name+"] member add";
+
+is_save = log_file.SaveLogInfo(log_data, 0);
+is_save = log_file.SaveLogInfo("---------------------------------", 1);
+
+if(is_save == false)
+{
+	System.out.println("Save Log ERROR");
+}
+
+else if(is_save == true)
+{
+	System.out.println("Save Log SUCCESS");
+}
 %>
 <%!
 public String getMultiParameter(MultipartRequest multirequest, String parameter_name, String default_value)
