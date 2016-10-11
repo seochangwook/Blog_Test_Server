@@ -29,6 +29,9 @@ String people_image = "";
 //데이터베이스 성공유무 확인변수//
 boolean is_success = false;
 String error_msg = "";
+
+//이미지값 경로//
+String uploadPath = "http://"+request.getLocalAddr()+":"+request.getLocalPort()+"/"+"DummyServer_Blog/images/";
 %>
 <%
 //관련 객체 선언//
@@ -49,7 +52,7 @@ ResultSet rs = null;
 ResultSetMetaData rsmt = null;
 
 try
-{
+{		
 	String query = "select name, departmentname, imageurl, introduction, etc from human where name = ?";
 	pstmt = con.prepareStatement(query);
 	
@@ -79,12 +82,7 @@ try
 			etc = rs.getString("etc");
 		}
 		
-		is_success = true;
-	}
-	
-	else if(row_count == 0) //아무것도 검색되지 않은 경우//
-	{
-		error_msg = "no human";
+		is_success = true; //성공했으니 true//
 	}
 }
 
@@ -111,7 +109,7 @@ JSONObject user_object = new JSONObject();
 
 user_object.put("name", receive_name);
 user_object.put("department", department_name);
-user_object.put("image", people_image);
+user_object.put("image", uploadPath+people_image);
 user_object.put("introduction", introduction);
 user_object.put("etc", etc);
 
