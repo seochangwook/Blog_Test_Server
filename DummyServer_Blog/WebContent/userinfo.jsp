@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/json; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
 <%@page import="java.sql.*"%>
 <%@page import="org.json.simple.JSONObject"%>
 <%@page import="org.json.simple.JSONArray"%>
@@ -21,10 +22,17 @@ System.out.println("* Remote port: "+request.getRemotePort());
 String receive_name;
 
 //인사관련 정보//
-String department_name = "";
-String introduction = "";
-String etc = "";
-String people_image = "";
+String human_id = "";
+String human_name = "";
+String human_imageurl = "";
+String human_age = "";
+String human_tel = "";
+String human_job = "";
+String human_department = "";
+String human_address = "";
+String human_emailaddress = "";
+String human_introduction = "";
+String human_etcinfo = "";
 
 //데이터베이스 성공유무 확인변수//
 boolean is_success = false;
@@ -53,7 +61,7 @@ ResultSetMetaData rsmt = null;
 
 try
 {		
-	String query = "select name, departmentname, imageurl, introduction, etc from human where name = ?";
+	String query = "select * from human where human_name = ?";
 	pstmt = con.prepareStatement(query);
 	
 	System.out.println("search name: "+receive_name);
@@ -75,11 +83,17 @@ try
 		//만약 결과가 여러개이라면 JSONArray를 이용해서 작업을 한다.//
 		while(rs.next()) //디비를 검색//
 		{
-			receive_name = rs.getString("name");
-			department_name = rs.getString("departmentname");
-			people_image = rs.getString("imageurl");
-			introduction = rs.getString("introduction");
-			etc = rs.getString("etc");
+			human_id = rs.getString("human_id");
+			human_name = rs.getString("human_name");
+			human_imageurl = rs.getString("human_imageurl");
+			human_age = rs.getString("human_age");
+			human_tel = rs.getString("human_tel");
+			human_job = rs.getString("human_job");
+			human_department = rs.getString("human_department");
+			human_address = rs.getString("human_address");
+			human_emailaddress = rs.getString("human_emailaddress");
+			human_introduction = rs.getString("human_introduction");
+			human_etcinfo = rs.getString("human_etcinfo");
 		}
 		
 		is_success = true; //성공했으니 true//
@@ -107,11 +121,17 @@ result_object.put("is_success", ""+is_success); //문자열로 검색 성공과 
 //검색조건에 따른 각각의 json데이터를 만들어 준다.//
 JSONObject user_object = new JSONObject();
 
-user_object.put("name", receive_name);
-user_object.put("department", department_name);
-user_object.put("image", uploadPath+people_image);
-user_object.put("introduction", introduction);
-user_object.put("etc", etc);
+user_object.put("human_id", human_id);
+user_object.put("human_imageurl", uploadPath+human_imageurl);
+user_object.put("human_age", human_age);
+user_object.put("human_name", human_name);
+user_object.put("human_tel", human_tel);
+user_object.put("human_job", human_job);
+user_object.put("human_department", human_department);
+user_object.put("human_address", human_address);
+user_object.put("human_emailaddress", human_emailaddress);
+user_object.put("human_introduction", human_introduction);
+user_object.put("human_etcinfo", human_etcinfo);
 
 result_object.put("result", user_object);
 
@@ -145,7 +165,7 @@ public String getParameter(HttpServletRequest request, String parameter_name, St
 	
 	return_str = request.getParameter(parameter_name);
 	
-	if(return_str == null)
+	if(return_str == null || return_str.equals(""))
 	{
 		return_str = default_value;
 	}

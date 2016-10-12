@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/json; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
 <%@page import="java.sql.*"%>
 <%@page import="org.json.simple.JSONObject"%>
 <%@page import="org.json.simple.JSONArray"%>
@@ -20,6 +21,11 @@ String imagefilename;
 String etc;
 String department_name;
 String introduction;
+String age;
+String tel;
+String job;
+String address;
+String emailaddress;
 
 boolean is_enroll = true; //등록성공이라 가정//
 //우선 저장할려는 사람이 이미 등록되어 있는지 검사//
@@ -41,24 +47,38 @@ int size = 10*1024*1024;
 //어렵게 MultipartRequest를 구현없이 cos.jar에 MultipartRequest를 사용//
 MultipartRequest multirequest = new MultipartRequest(request, uploadPath, size, "utf-8", new DefaultFileRenamePolicy());
 
-name = getMultiParameter(multirequest, "name", "user");
-etc = getMultiParameter(multirequest, "etc", "");
-department_name = getMultiParameter(multirequest, "departmentname", "no department");
-introduction = getMultiParameter(multirequest, "introduction", "");
+name = getMultiParameter(multirequest, "human_name", "user");
+etc = getMultiParameter(multirequest, "human_etcinfo", "");
+department_name = getMultiParameter(multirequest, "human_departmentname", "");
+introduction = getMultiParameter(multirequest, "human_introduction", "");
+age = getMultiParameter(multirequest, "human_age", "");
+tel = getMultiParameter(multirequest, "human_tel", "");
+job = getMultiParameter(multirequest, "human_job", "");
+address = getMultiParameter(multirequest, "human_address", "");
+emailaddress = getMultiParameter(multirequest, "human_emailaddress", "");
 
 //업로드한 파일들을 Enumeration타입으로 반환//
 //Enumeration형은 데이터를 뽑아올때 유용한 인터페이스//
-Enumeration files = multirequest.getFileNames();
-//업로드한 파일들의 이름을 얻어옴//
-String file = (String)files.nextElement();
-//파일이 중복되면 자동 renameming진행 ex) ~_1.png//
-imagefilename = multirequest.getFilesystemName(file);
+try
+{
+	Enumeration files = multirequest.getFileNames();
+	//업로드한 파일들의 이름을 얻어옴//
+	String file = (String)files.nextElement();
+	//파일이 중복되면 자동 renameming진행 ex) ~_1.png//
+	//중복일 경우 해당 rename결과를 그대로 사용하고 새로운거면 새로운 걸로 저장//
+	imagefilename = multirequest.getFilesystemName(file);
 
-System.out.println("name: "+name);
-System.out.println("department: "+department_name);
-System.out.println("introduction: "+introduction);
-System.out.println("etc: "+etc);
-System.out.println("upload file: "+imagefilename);
+	System.out.println("name: "+name);
+	System.out.println("department: "+department_name);
+	System.out.println("introduction: "+introduction);
+	System.out.println("etc: "+etc);
+	System.out.println("upload file: "+imagefilename);
+}
+
+catch(Exception e)
+{
+	imagefilename = "";
+}
 //이미지에 대한 저장은 파일이름이 저장되고, 출력 시 경로를 붙여준다.(길이문제 고려)//
 %>
 <%
@@ -76,15 +96,22 @@ try
 	
 	if(is_enroll_already == false)
 	{
-		String query = "INSERT INTO human(name, departmentname, imageurl, introduction, etc) VALUES(?,?,?,?,?)";
+		System.out.println("insert upload file: "+imagefilename);
+		
+		String query = "INSERT INTO human(human_imageurl, human_age, human_tel, human_job, human_department, human_address, human_emailaddress, human_introduction, human_etcinfo, human_name) VALUES(?,?,?,?,?,?,?,?,?,?)";
 		pstmt = con.prepareStatement(query);
 	
 		//값 셋팅//
-		pstmt.setString(1,name);
-		pstmt.setString(2,department_name);
-		pstmt.setString(3,imagefilename);
-		pstmt.setString(4,introduction);
-		pstmt.setString(5,etc);
+		pstmt.setString(1, imagefilename);
+		pstmt.setString(2, age);
+		pstmt.setString(3, tel);
+		pstmt.setString(4, job);
+		pstmt.setString(5, department_name);
+		pstmt.setString(6, address);
+		pstmt.setString(7, emailaddress);
+		pstmt.setString(8, introduction);
+		pstmt.setString(9, etc);
+		pstmt.setString(10, name);
 	
 		int result_code = pstmt.executeUpdate();
 	
@@ -170,7 +197,7 @@ public boolean CheckEnrollDuplicate(String name, String department_name)
 	
 	try
 	{
-		String query = "select name, departmentname from human";
+		String query = "select human_name, human_department from human";
 		pstmt = con.prepareStatement(query);
 		
 		rs = pstmt.executeQuery(); //쿼리문을 수행//
@@ -178,8 +205,8 @@ public boolean CheckEnrollDuplicate(String name, String department_name)
 		while(rs.next())
 		{
 			//존재하는지 비교//
-			String search_name = rs.getString("name");
-			String search_departmentname = rs.getString("departmentname");
+			String search_name = rs.getString("human_name");
+			String search_departmentname = rs.getString("human_department");
 			
 			if(search_name.equals(name) && search_departmentname.equals(department_name))
 			{
