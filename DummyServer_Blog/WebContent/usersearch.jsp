@@ -8,14 +8,6 @@
 <%@page import="DB.*"%>
 <%
 request.setCharacterEncoding("UTF-8");
-
-System.out.println("* Local name: "+request.getLocalName());
-System.out.println("* Local port: "+request.getLocalPort());
-System.out.println("* Local addr: "+request.getLocalAddr());
-System.out.println("* Remote host: "+request.getRemoteHost());
-System.out.println("* Remote addr: "+request.getRemoteAddr());
-System.out.println("* Remote port: "+request.getRemotePort());
-
 %>
 <%
 //관련 변수 선언//
@@ -142,7 +134,7 @@ out.flush(); //출력버퍼에 있는 데이터를 모두 초기화//
 <%
 //로그정보 기록//
 String client_ipaddr = request.getRemoteAddr();
-String log_data = "["+client_ipaddr+"] call ["+receive_name+"] info";
+String log_data = "["+client_ipaddr+"] call ["+receive_name+"] search";
 
 is_save = log_file.SaveLogInfo(log_data, 0);
 is_save = log_file.SaveLogInfo("---------------------------------", 1);

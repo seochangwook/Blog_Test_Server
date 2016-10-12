@@ -78,7 +78,8 @@ try
 
 catch(Exception e)
 {
-	imagefilename = "";
+	//디폴트 이미지 처리(당장에 보여질 사진이 없기에 처리)//
+	imagefilename = "default_humanimage.png";
 }
 //이미지에 대한 저장은 파일이름이 저장되고, 출력 시 경로를 붙여준다.(길이문제 고려)//
 %>
