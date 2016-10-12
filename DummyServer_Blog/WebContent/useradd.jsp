@@ -73,6 +73,7 @@ try
 	System.out.println("introduction: "+introduction);
 	System.out.println("etc: "+etc);
 	System.out.println("upload file: "+imagefilename);
+	System.out.println("human_departmentname: "+department_name);
 }
 
 catch(Exception e)
