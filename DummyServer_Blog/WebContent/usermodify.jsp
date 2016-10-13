@@ -54,11 +54,27 @@ System.out.println("original imageurl: "+original_imageurl);
 try
 {
 	Enumeration files = multirequest.getFileNames();
-	//업로드한 파일들의 이름을 얻어옴//
-	String file = (String)files.nextElement();
-	//파일이 중복되면 자동 renameming진행 ex) ~_1.png//
-	//중복일 경우 해당 rename결과를 그대로 사용하고 새로운거면 새로운 걸로 저장//
-	new_imageurl = multirequest.getFilesystemName(file);
+	
+	int image_count = 0;
+	
+	//현재는 가장 마지막거를 기준으로 하지만 여러개의 이미지를 받을 필요 시 배열에 저장 후 관련 디비에 저장// 
+	while(files.hasMoreElements())
+	{
+		new_imageurl = multirequest.getFilesystemName((String)files.nextElement());
+		System.out.println("new image file name: "+new_imageurl);
+		
+		image_count++;
+	}
+	
+	if(image_count == 0) //이미지가 한개도 오지 않았을 경우//
+	{
+		new_imageurl = "";
+		
+		//사용자가 이미지를 변경하지 않을경우 기존 이미지가 반영//
+		new_imageurl = original_imageurl; 
+		
+		System.out.println("image:"+new_imageurl);
+	}
 }
 
 catch(Exception e) //클라이언트에서 이미지에 대한 수정이 없을 경우 해당 예외가 발생//

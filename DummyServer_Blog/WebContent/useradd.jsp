@@ -17,7 +17,7 @@ request.setCharacterEncoding("UTF-8");
 <%
 //variable//
 String name;
-String imagefilename;
+String imagefilename = "";
 String etc;
 String department_name;
 String introduction;
@@ -62,18 +62,22 @@ emailaddress = getMultiParameter(multirequest, "human_emailaddress", "");
 try
 {
 	Enumeration files = multirequest.getFileNames();
-	//업로드한 파일들의 이름을 얻어옴//
-	String file = (String)files.nextElement();
-	//파일이 중복되면 자동 renameming진행 ex) ~_1.png//
-	//중복일 경우 해당 rename결과를 그대로 사용하고 새로운거면 새로운 걸로 저장//
-	imagefilename = multirequest.getFilesystemName(file);
-
-	System.out.println("name: "+name);
-	System.out.println("department: "+department_name);
-	System.out.println("introduction: "+introduction);
-	System.out.println("etc: "+etc);
-	System.out.println("upload file: "+imagefilename);
-	System.out.println("human_departmentname: "+department_name);
+	
+	int image_count = 0;
+	
+	//현재는 가장 마지막거를 기준으로 하지만 여러개의 이미지를 받을 필요 시 배열에 저장 후 관련 디비에 저장// 
+	while(files.hasMoreElements())
+	{
+		imagefilename = multirequest.getFilesystemName((String)files.nextElement());
+		System.out.println("image file name: "+imagefilename);
+		
+		image_count++;
+	}
+	
+	if(image_count == 0) //이미지가 한개도 오지 않았을 경우//
+	{
+		imagefilename = "default_humanimage.png";
+	}
 }
 
 catch(Exception e)
