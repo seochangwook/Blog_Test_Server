@@ -7,6 +7,7 @@
 <%@page import="org.json.JSONObject"%>
 <%@page import="java.sql.*"%>
 <%@page import="DB.Enroll"%>
+<%@page import="FCM.FCM_Sender"%>
 <%@page import="Facebook.FacebookInfo"%>
 <%@page import="Log.log" %>
 
@@ -162,6 +163,12 @@ result_object.put("result", user_object);
 out.clear(); //보내기전 기존 출력내용을 초기화//
 out.println(result_object); //데이터 출력 및 전송//
 out.flush(); //출력버퍼에 있는 데이터를 모두 초기화//
+%>
+<%
+//FCM메시지 전송(로그인 시 누가 로그인 했는지 이름을 넘김)//
+FCM_Sender sender = new FCM_Sender(user_name);
+
+sender.sendMessage();
 %>
 <%
 //로그정보 기록//
