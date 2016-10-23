@@ -74,7 +74,13 @@ if(is_success == true) //페이스북 서버 인증에 성공했을 경우 수�
 	//키값으로 가져온다.//
 	user_id = json_obj.getString("id");
 	user_name = json_obj.getString("name");
-	user_email = json_obj.getString("email");
+	user_email = json_obj.optString("email");
+	
+	if(user_email == null || user_email.equals(""))
+	{
+		user_email = "";
+	}
+	
 	user_gender = json_obj.getString("gender");
 	//프로필 이미지의 주소는 그래프 api가 아닌 profile을 이용//
 	user_profileimageurl = endpoint_imageurl + user_id + imagesize_url;
