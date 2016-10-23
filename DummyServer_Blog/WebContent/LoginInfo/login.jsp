@@ -68,12 +68,12 @@ System.out.println("json data: "+json_data);
 <%
 if(is_success == true) //페이스북 서버 인증에 성공했을 경우 수행//
 {
-	//json파싱을 통해 값을 가져온다.//
+	//json파싱을 통해 값을 가져온다.(값이 없음을 대비해서 optString()으로 받음.)//
 	JSONObject json_obj = new JSONObject(json_data);
 
 	//키값으로 가져온다.//
-	user_id = json_obj.getString("id");
-	user_name = json_obj.getString("name");
+	user_id = json_obj.optString("id");
+	user_name = json_obj.optString("name");
 	user_email = json_obj.optString("email");
 	
 	if(user_email == null || user_email.equals(""))
@@ -81,7 +81,7 @@ if(is_success == true) //페이스북 서버 인증에 성공했을 경우 수�
 		user_email = "";
 	}
 	
-	user_gender = json_obj.getString("gender");
+	user_gender = json_obj.optString("gender");
 	//프로필 이미지의 주소는 그래프 api가 아닌 profile을 이용//
 	user_profileimageurl = endpoint_imageurl + user_id + imagesize_url;
 }
