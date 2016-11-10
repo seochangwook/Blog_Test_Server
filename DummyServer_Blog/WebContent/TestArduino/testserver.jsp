@@ -4,6 +4,7 @@
 <%@page import="org.json.simple.JSONObject"%>
 <%@page import="org.json.simple.JSONArray"%>
 <%@page import="Log.log" %>
+<%@page import="FCM.FCM_Sender"%>
 
 <%
 //Charcterset//
@@ -16,7 +17,16 @@ String input_str;
 <%
 input_str = getParameter(request, "test_str", "");
 
-System.out.println("input str for http : " + input_str);
+System.out.println("input str for http : " + input_str + "(size: "+input_str.length()+")");
+%>
+<%
+//FCM연동(경고메시지가 왔을 경우)//
+if(input_str.equals("fire!!"))
+{
+	FCM_Sender sender = new FCM_Sender(input_str);
+
+	sender.sendMessage();
+}
 %>
 <%
 //응답 json메시지 설정//
