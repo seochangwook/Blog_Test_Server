@@ -36,9 +36,11 @@ JSONObject result_object = new JSONObject();
 //검색조건에 따른 각각의 json데이터를 만들어 준다.//
 JSONObject user_object = new JSONObject();
 
-user_object.put("server state", "nomal");
+user_object.put("server message", input_str);
 
 result_object.put("server type", "http");
+
+result_object.put("result", user_object);
 
 out.clear(); //보내기전 기존 출력내용을 초기화//
 out.println(result_object); //데이터 출력 및 전송//

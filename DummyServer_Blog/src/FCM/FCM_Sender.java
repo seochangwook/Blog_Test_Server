@@ -48,6 +48,7 @@ public class FCM_Sender {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		
+		//기본적으로 전체 등록된 유저로 가정(필요에 의해서 조인을 이용한 알람 그룹 지정)//
 		String query = "select fcm_token from user";
 		
 		try {
